@@ -13,8 +13,7 @@
 #define MAXLINE 512
 
 void sigchld_handler(int signo) {
-    while (waitpid(-1, NULL, WNOHANG) > 0)
-        ;
+    while (waitpid(-1, NULL, WNOHANG) > 0);
 }
 
 int main() {

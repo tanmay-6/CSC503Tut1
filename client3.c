@@ -7,7 +7,7 @@
 #include <sys/types.h>
 #include <errno.h>
 
-#define SERV_PORT 8080
+#define server_port 8080
 #define MAXLINE 512
 
 int main(int argc, char **argv) {
@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
     memset(&servaddr, 0, sizeof(servaddr));
     servaddr.sin_family = AF_INET;
     servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-    servaddr.sin_port = htons(SERV_PORT);
+    servaddr.sin_port = htons(server_port);
 
     if (connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {
         perror("connect error");

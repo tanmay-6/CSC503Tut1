@@ -7,6 +7,8 @@ typedef pair<int,int> pii;
 void djk(int src, vector<vector<pii>> &adj){
     vector<int> dist(adj.size(), INT_MAX);
     vector<int> parent(adj.size(),-1);
+    vector<bool> visited(adj.size(), false);
+    vector<pii> edges;
     
     priority_queue<pii, vector<pii>, greater<pii>> pq;
     dist[src] = 0;
@@ -17,6 +19,12 @@ void djk(int src, vector<vector<pii>> &adj){
         int node = pq.top().second;
         pq.pop();
 
+        if(visited[node]) continue;
+        visited[node] = true;
+
+        if(parent[node] != -1){
+            edges.push_back({parent[node], node});
+        }
         for(auto it : adj[node]){
             int ew = it.second; //ew -> edgeweight
             int adjnode = it.first;
@@ -29,8 +37,8 @@ void djk(int src, vector<vector<pii>> &adj){
         }
     }
 
-    for(int i=1; i<adj.size(); i++){
-        cout<<parent[i]<<" "<<i<<endl;
+    for(auto &edge : edges){
+        cout<<edge.first<<" "<<edge.second<<endl;
     }
 }
 
@@ -88,6 +96,7 @@ void wbfs(int src, vector<vector<pii>> &adj){
     dist[src] = 0;
     deque<int> dq;
     dq.push_front(src);
+    vector<pii> edges;
     
     while(!dq.empty()){
         int node = dq.front();
@@ -96,18 +105,20 @@ void wbfs(int src, vector<vector<pii>> &adj){
             int adjnode = it.first;
             int dis = it.second;
             
-            if(dis + dist[node] < dist[adjnode]){
+            if(dis + dist[node] < dist[adjnode] && parent[adjnode] == -1){
                 dist[adjnode] = dis + dist[node];
                 parent[adjnode] = node;
                 
+                edges.push_back({node, adjnode});
+
                 if(dis == 0) dq.push_front(adjnode);
                 else dq.push_back(adjnode);
             }
         }
     }
     
-    for(int i=0; i<adj.size(); i++){
-        cout<<i<<" "<<dist[i]<<" "<<parent[i]<<endl;
+    for(auto &edge : edges){
+        cout<< edge.first<<" "<<edge.second<<endl;
     }
 }
 
@@ -118,12 +129,18 @@ void prm(int src, vector<vector<pii>> &adj){
     priority_queue<pii, vector<pii>, greater<pii>> pq;
     wgt[0] = 0;
     pq.push({0,0});
+    vector<vector<int>> edges; // parent, child, weight
     
     while(!pq.empty()){
         int node = pq.top().second;
         pq.pop();
+        if(visited[node]) continue;
         visited[node] = true;
         
+        if(parent[node] != -1){
+            edges.push_back({parent[node], node, wgt[node]});
+        }
+
         for(auto it : adj[node]){
             int ew = it.second;
             int adjnode = it.first;
@@ -135,15 +152,9 @@ void prm(int src, vector<vector<pii>> &adj){
             }
         }
     }
-    cout << "E - W"<<endl;
-    int total = 0;
-    for (int i = 1; i < adj.size(); ++i) {
-        if (parent[i] != -1) {
-            cout << parent[i] << " " << i << " " << wgt[i] << "\n";
-            total += wgt[i];
-        }
+    for(auto it : edges){
+        cout<<it[0]<<" "<<it[1]<<" "<<it[2]<<endl;
     }
-    cout<<"Total: "<<total<<endl;
 }
 
 int main(){
@@ -211,7 +222,7 @@ int main(){
             #elif WBFS
                 wbfs(0,adj);
             #elif PRM
-                prm(adj);
+                prm(0,adj);
             #endif
         #endif
     #endif

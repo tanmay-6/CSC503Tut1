@@ -53,7 +53,7 @@ void bfs(int src, vector<vector<int>> &adj){
         int size = q.size();
         for(int i=0; i<size; i++){
             int top = q.front();
-            cout<<top<<endl;
+            cout<<top<<" "<<level<<endl;
             q.pop();
             for( auto neigh : adj[top]){
                 if(visited[neigh] == 0){
@@ -68,20 +68,22 @@ void bfs(int src, vector<vector<int>> &adj){
 
 //DFS
 void dfs(int src, vector<vector<int>> &adj){
-    stack<int> st;
+    stack<pii> st;
     vector<int> visited(adj.size(), 0);
-    st.push(src);
-    visited[src] = 1;
+    st.push({src,0});
 
     while(!st.empty()){
-        int node = st.top();
+        int node = st.top().first;
+        int level = st.top().second;
         st.pop();
-        cout<<node<<endl;
+        if(visited[node]) continue;
+        visited[node] = 1;
+        cout<<node<<" "<<level<<endl;
 
         for(auto it : adj[node]){
             if(visited[it] == 0){
-                st.push(it);
-                visited[it] = 1;
+                st.push({it, level+1});
+                //visited[it] = 1;
             }
         }
         

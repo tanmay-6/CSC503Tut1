@@ -2,22 +2,17 @@ CXX = g++
 CXXFLAGS = -O2
 SRC = main.cpp
 
-# Adjustable parameters
-SIZE = 20000         # Number of elements
-RUNS = 100            # Number of runs per algorithm
+SIZE = 20000         
+RUNS = 100            
 RESULT_FILE = results.csv
 
-# Sorting algorithms
 ALGORITHMS = MERGE_SORT QUICK_SORT RANDOMIZED_QUICK_SORT HEAP_SORT BUBBLE_SORT SELECTION_SORT
 
-# Default target
 all: run
 
-# Run all algorithms and store average results in CSV
 run: $(RESULT_FILE)
 	@echo "All algorithms executed. Results saved in $(RESULT_FILE)"
 
-# Build each algorithm, run multiple times, compute average
 $(RESULT_FILE): $(ALGORITHMS)
 	@echo "Algorithm,AvgTime(s),AvgMemory(KB)" > $(RESULT_FILE)
 	@for algo in $(ALGORITHMS); do \
@@ -34,7 +29,6 @@ $(RESULT_FILE): $(ALGORITHMS)
 		done; \
 	done
 
-# Placeholder to match algorithm names (phony so they always run)
 $(ALGORITHMS):
 	@true
 

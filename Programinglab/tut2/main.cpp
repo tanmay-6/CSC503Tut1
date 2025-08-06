@@ -109,11 +109,11 @@ int main(int argc, char *argv[]){
 
     srand(time(NULL));
     vector<int> arr(n);
-    for (int i = 0; i < n; ++i) {
-        arr[i] = rand();
-        cout<<arr[i]<<" ";
-    }
-    cout<<endl;
+    // for (int i = 0; i < n; ++i) {
+    //     arr[i] = rand();
+    //     cout<<arr[i]<<" ";
+    // }
+    // cout<<endl;
 
     #ifdef MERGE_SORT
         mergeSort(arr);
@@ -132,10 +132,10 @@ int main(int argc, char *argv[]){
         return 2;
     #endif
 
-    for(int i=0; i<arr.size(); i++){
-        cout<<arr[i]<<" ";
-    }
-    cout<<endl;
+    // for(int i=0; i<arr.size(); i++){
+    //     cout<<arr[i]<<" ";
+    // }
+    // cout<<endl;
     cout<<"sorting done"<<endl;
     return 0;
 }

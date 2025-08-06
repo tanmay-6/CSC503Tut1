@@ -1,0 +1,45 @@
+
+CC = g++
+SRC = main.cpp
+SIZES = 10000 20000 50000
+
+FLAGS = \
+   	-DMERGE_SORT \
+    -DQUICK_SORT \
+    -DRANDOMIZED_QUICK_SORT \
+    -DHEAP_SORT \
+    -DBUBBLE_SORT \
+    -DSELECTION_SORT
+
+MERGE_SORT_BIN = sort_merge
+QUICK_SORT_BIN = sort_quick
+RANDQSORT_BIN = sort_randq
+HEAP_SORT_BIN = sort_heap
+BUBBLE_SORT_BIN = sort_bubble
+SEL_SORT_BIN = sort_select
+
+all: $(MERGE_SORT_BIN) $(QUICK_SORT_BIN) $(RANDQSORT_BIN) $(HEAP_SORT_BIN) $(BUBBLE_SORT_BIN) $(SEL_SORT_BIN)
+
+$(MERGE_SORT_BIN): $(SRC)
+	$(CXX) -DMERGE_SORT $(SRC) -o $@
+
+$(QUICK_SORT_BIN): $(SRC)
+	$(CXX) -DQUICK_SORT $(SRC) -o $@
+
+$(RANDQSORT_BIN): $(SRC)
+	$(CXX) -DRANDOMIZED_QUICK_SORT $(SRC) -o $@
+
+$(HEAP_SORT_BIN): $(SRC)
+	$(CXX) -DHEAP_SORT $(SRC) -o $@
+
+$(BUBBLE_SORT_BIN): $(SRC)
+	$(CXX) -DBUBBLE_SORT $(SRC) -o $@
+
+$(SEL_SORT_BIN): $(SRC)
+	$(CXX) -DSELECTION_SORT $(SRC) -o $@
+
+run : $
+
+clean:
+	rm -f sort_merge sort_quick sort_randq sort_heap sort_bubble sort_select
+

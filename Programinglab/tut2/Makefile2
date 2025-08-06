@@ -2,47 +2,41 @@ CXX = g++
 CXXFLAGS = -O2
 SRC = main.cpp
 
-SIZE = 20000         
-BATCHES = 100
+# Adjustable parameters
+SIZE = 20000         # Number of elements
+RUNS = 100            # Number of runs per algorithm
 RESULT_FILE = results.csv
 
+# Sorting algorithms
 ALGORITHMS = MERGE_SORT QUICK_SORT RANDOMIZED_QUICK_SORT HEAP_SORT BUBBLE_SORT SELECTION_SORT
 
+# Default target
 all: run
 
+# Run all algorithms and store average results in CSV
 run: $(RESULT_FILE)
 	@echo "All algorithms executed. Results saved in $(RESULT_FILE)"
 
+# Build each algorithm, run multiple times, compute average
 $(RESULT_FILE): $(ALGORITHMS)
 	@echo "Algorithm,AvgTime(s),AvgMemory(KB)" > $(RESULT_FILE)
 	@for algo in $(ALGORITHMS); do \
 		echo "\n==== Building $$algo ===="; \
 		$(CXX) $(CXXFLAGS) $(SRC) -o sorter -D$$algo; \
 		total_time=0; total_mem=0; \
-		for i in `seq 1 $(BATCHES)`; do \
+		for i in `seq 1 $(RUNS)`; do \
 			output=`/usr/bin/time -f "%U %M" ./sorter $(SIZE) 2>&1 >/dev/null`; \
 			time_val=`echo $$output | awk '{print $$1}'`; \
 			mem_val=`echo $$output | awk '{print $$2}'`; \
 			total_time=`echo "$$total_time + $$time_val" | bc`; \
 			total_mem=`echo "$$total_mem + $$mem_val" | bc`; \
+			echo "$$algo,$$i,$$time_val,$$mem_val" >> $(RESULT_FILE); \
 		done; \
-		avg_time=`echo "scale=5; $$total_time / $(BATCHES)" | bc`; \
-		avg_mem=`echo "scale=2; $$total_mem / $(BATCHES)" | bc`; \
-		echo "$$algo,$$avg_time,$$avg_mem" >> $(RESULT_FILE); \
 	done
 
+# Placeholder to match algorithm names (phony so they always run)
 $(ALGORITHMS):
 	@true
-
-GNUPLOT_SCRIPT = plot_results.plt
-
-plot:
-	@if [ ! -f $(RESULT_FILE) ]; then \
-		echo "Error: $(RESULT_FILE) not found. Run 'make run' first."; \
-		exit 1; \
-	fi
-	gnuplot $(GNUPLOT_SCRIPT)
-	@echo "Plots generated: time_plot.png, memory_plot.png"
 
 clean:
 	rm -f sorter $(RESULT_FILE)

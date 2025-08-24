@@ -99,12 +99,19 @@ int main(int argc, char *argv[]){
     int numOfNodes = atoi(argv[1]);
     int numOfEdges = atoi(argv[2]);
     vector<vector<int>> myGraph = generate_graph(numOfNodes, numOfEdges);
-    
-    cout<<"DfSI : ";
-    dfsi(myGraph);
-    cout<<"DFSR : ";
-    dfsr(myGraph);
-    cout<<"BFS : ";
-    bfs(myGraph);
+    #if defined(VARM)
+        #if defined(DFSI)
+        cout<<"DfSI : ";
+        dfsi(myGraph);
+        #elif defined(DFSR)
+        cout<<"DFSR : ";
+        dfsr(myGraph);
+        #elif defined(BFS)
+        cout<<"BFS : ";
+        bfs(myGraph);
+        #endif
+    #elif defined(VARN)
+        cout<<"Varn not defined"<<endl;
+    #endif
     return 0;
 }

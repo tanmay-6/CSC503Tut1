@@ -1,42 +1,40 @@
-CXX := g++
 CXXFLAGS := -O2 -std=c++17
-NODES := 100 200 300 400 500 600 700 800 900 1000
-SPARSITIES := a b c d
-ALGORITHMS := DFSI DFSR BFS
+nodes := 100 200 300 400 500 600 700 800 900 1000
+sparcities := a b c d
+algorithms := DFSI DFSR BFS
 FLAGS := VARN VARM
-
 BIN_DIR := bin
 RESULTS := results.csv
-
 $(shell mkdir -p $(BIN_DIR))
-
 all: run
-
 init:
 	echo "flag,algorithm,param,time(s),memory(KB)" > $(RESULTS)
-
 run: init
 	@for flag in $(FLAGS); do \
-	  for algo in $(ALGORITHMS); do \
+	  for algo in $(algorithms); do \
 	    if [ $$flag = "VARM" ]; then \
-	      for n in $(NODES); do \
+	      for n in $(nodes); do \
 	        exe="$(BIN_DIR)/$${flag}_$${algo}_$${n}"; \
-	        $(CXX) $(CXXFLAGS) -D$$flag -D$$algo main.cpp -o $$exe; \
+	        g++ $(CXXFLAGS) -D$$flag -D$$algo main.cpp -o $$exe; \
 	        /usr/bin/time -f "$$flag,$$algo,$$n,%e,%M" -o tmp.csv $$exe $$n >/dev/null; \
-	        cat tmp.csv >> $(RESULTS); \
+	        awk -F',' '{printf "%s,%s,%s,%.5f,%s\n",$$1,$$2,$$3,$$4,$$5}' tmp.csv >> $(RESULTS); \
 	      done; \
 	    else \
-	      for sp in $(SPARSITIES); do \
+	      for sp in $(sparcities); do \
 	        exe="$(BIN_DIR)/$${flag}_$${algo}_$${sp}"; \
-	        $(CXX) $(CXXFLAGS) -D$$flag -D$$algo main.cpp -o $$exe; \
+	        g++ $(CXXFLAGS) -D$$flag -D$$algo main.cpp -o $$exe; \
 	        /usr/bin/time -f "$$flag,$$algo,$$sp,%e,%M" -o tmp.csv $$exe $$sp >/dev/null; \
-	        cat tmp.csv >> $(RESULTS); \
+	        awk -F',' '{printf "%s,%s,%s,%.5f,%s\n",$$1,$$2,$$3,$$4,$$5}' tmp.csv >> $(RESULTS); \
 	      done; \
 	    fi; \
 	  done; \
 	done
 	@rm -f tmp.csv
-	@echo "All experiments complete. Results in $(RESULTS)"
-
+	@echo "Results in $(RESULTS)"
+prepare_data:
+	awk -F',' 'NR==1 || $$1=="VARN"{print > "varn.csv"}' results.csv
+	awk -F',' 'NR==1 || $$1=="VARM"{print > "varm.csv"}' results.csv
+plots: prepare_data
+	gnuplot plot.plt
 clean:
-	rm -rf $(BIN_DIR) $(RESULTS)
+	rm -rf $(BIN_DIR) $(RESULTS) varn.csv varm.csv varn.png varm.png

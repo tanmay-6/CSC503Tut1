@@ -1,0 +1,4 @@
+Comparison among dfs(Stack) DFS(recursion) BFS(Queue)
+For fixed verties and variable edges, edges grows exponentially as vertices grow, therefore memory limit grows as to store a bigger graph. DFS stack has highest time and memory consumption as to store stack and iterate through each one in reverse order. followed by which DFS Recursion have higher space and time due to carring visited array and recursive stack. after which BFS have least space and time.
+
+For fixed sparsity general trend can be observed as sparsity increases space and time both start to increase. DFS iterative again having higher time and higher memory, followed by dfs recursively and finally BFS which is significantly faster.

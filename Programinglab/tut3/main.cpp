@@ -92,26 +92,52 @@ void bfs(vector<vector<int>> &adj, int node = 0){
 }
 
 int main(int argc, char *argv[]){
-    if(argc < 3){
+    if(argc < 2){
         cout<<"wrong command line input"<<endl;
         return 1;
     }
-    int numOfNodes = atoi(argv[1]);
-    int numOfEdges = atoi(argv[2]);
-    vector<vector<int>> myGraph = generate_graph(numOfNodes, numOfEdges);
-    #if defined(VARM)
-        #if defined(DFSI)
-        cout<<"DfSI : ";
-        dfsi(myGraph);
-        #elif defined(DFSR)
-        cout<<"DFSR : ";
-        dfsr(myGraph);
-        #elif defined(BFS)
-        cout<<"BFS : ";
-        bfs(myGraph);
-        #endif
-    #elif defined(VARN)
-        cout<<"Varn not defined"<<endl;
+    srand(time(NULL));
+    int numOfNodes;
+    int numOfEdges;
+    vector<vector<int>> myGraph;
+    #ifdef VARN
+        char sparsity = argv[1][0];
+        numOfNodes = 100+rand()%900;
+        if(sparsity == 'a'){
+            numOfEdges = 2*numOfNodes;
+        }
+        else if(sparsity == 'b'){
+            numOfEdges = numOfNodes*log(numOfNodes);
+        }
+        else if(sparsity == 'c'){
+            numOfEdges = numOfNodes*sqrt(numOfNodes);
+        }
+        else if(sparsity == 'd'){
+            numOfEdges = (numOfNodes*(numOfNodes-1))/2;
+        }
+        myGraph = generate_graph(numOfNodes,numOfEdges);
     #endif
+
+    #ifdef VARM
+        numOfNodes = stoi(argv[1]);
+        int high = (numOfNodes*(numOfNodes-1))/2;
+        int low = 2*numOfNodes;
+        numOfEdges = low+rand()%(high-low+1);
+        myGraph = generate_graph(numOfNodes, numOfEdges);
+    #endif
+
+    #ifdef DFSI
+    cout<<"DfSI : ";
+    dfsi(myGraph);
+    #endif
+    #ifdef DFSR
+    cout<<"DFSR : ";
+    dfsr(myGraph);
+    #endif
+    #ifdef BFS
+    cout<<"BFS : ";
+    bfs(myGraph);
+    #endif
+    
     return 0;
 }

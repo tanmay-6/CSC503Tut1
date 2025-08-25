@@ -1,0 +1,28 @@
+SRC = main.cpp
+TARGET = program
+K?=5
+N?=2000
+M?=15500
+ALGO = DFSR DFSI BFS
+FLAGS = VARM VARN
+
+all : run
+build:
+	@for f in $(FLAGS); do \
+		for a in $(ALGO); do \
+			echo "Compiling for $$f $$a..."; \
+			g++ $(SRC) -o program_$$f_$$a -D$$f -D$$a; \
+		done; \
+	done
+run: build
+	@for f in $(FLAGS); do\
+		for a in $(ALGO); do\
+			echo "$$f and $$a"; \
+			for i in $$(seq 1 $(K)); do\
+				/usr/bin/time -f "%U %M" ./program_$$f_$$a $(N) $(M);\
+			done;\
+		done;\
+	done
+
+clean:
+	rm -f program_*

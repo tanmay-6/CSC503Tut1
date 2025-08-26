@@ -13,7 +13,7 @@ vector<vector<int>> generate_graph(int n, int m){
         if(uniqedg.count({u,v}) || uniqedg.count({v,u})) continue;
         uniqedg.insert({u,v});
         adj[u].push_back(v);
-        adj[v].push_back(u);
+        adj[v].push_back(u); 
     }
     return adj;
 }

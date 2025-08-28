@@ -2,11 +2,11 @@
 #include <pthread.h>
 using namespace std;
 
-int N = 0;
-int M = 0;//2.M denoting number of threads
+#define N 100000
+#define M 10 //2.M denoting number of threads
 int currIndex =0; //3.current index in vector
 int llIndex =0;
-vector<int> v;
+vector<int> v(N);
 pthread_mutex_t lockVar; 
 pthread_cond_t condVar;
 
@@ -96,15 +96,7 @@ bool verifier(LinkedList* ll, vector<int> v){
     return true;
 }
 
-int main(int argc, char* argv[]){
-    if(argc!=3){
-        cout<<argv[1]<<" "<<argv[2]<<" wrong implementation"<<endl;
-        return 1;
-    }
-    N = stoi(argv[1]);
-    M = stoi(argv[2]);
-    v.resize(N);
-
+int main(){
     ifstream readfile("random.txt");
     int num;
     for(int i=0; i<N; i++){

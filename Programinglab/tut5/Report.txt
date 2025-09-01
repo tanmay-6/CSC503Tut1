@@ -1,0 +1,241 @@
+Input :  objdump -f Prob1
+
+Prob1:     file format elf64-x86-64
+architecture: i386:x86-64, flags 0x00000150:
+HAS_SYMS, DYNAMIC, D_PAGED
+start address 0x00000000000010c0
+
+///
+file format : ELF - executable and linkable format, standard file format for executable files, object code, shared libraries and core dumps.
+architecture :  "i386 architecture" refers to the fact that the file is compiled or designed to run on a 32-bit x86 instruction set architecture
+HAS_SYMS : flag shows that this binary has symbol table.
+DYNAMIC : this binary is dynamically linked
+D-PAGED : this binary is pagable; can use virtual memory
+start address : this is entry point address, usually _start function.
+///
+
+To disassemble whole binary
+Input : objdump -d Prob1
+
+Prob1:     file format elf64-x86-64
+
+
+Disassembly of section .init:
+
+0000000000001000 <_init>:
+    1000:       f3 0f 1e fa             endbr64
+    1004:       48 83 ec 08             sub    $0x8,%rsp
+    1008:       48 8b 05 d9 2f 00 00    mov    0x2fd9(%rip),%rax        # 3fe8 <__gmon_start__@Base>
+    100f:       48 85 c0                test   %rax,%rax
+    1012:       74 02                   je     1016 <_init+0x16>
+    1014:       ff d0                   call   *%rax
+    1016:       48 83 c4 08             add    $0x8,%rsp
+    101a:       c3                      ret
+
+///
+this section is used by runtime linker for initialization. 
+///
+
+Disassembly of section .plt:
+
+0000000000001020 <.plt>:
+    1020:       ff 35 82 2f 00 00       push   0x2f82(%rip)        # 3fa8 <_GLOBAL_OFFSET_TABLE_+0x8>
+    1026:       ff 25 84 2f 00 00       jmp    *0x2f84(%rip)        # 3fb0 <_GLOBAL_OFFSET_TABLE_+0x10>
+    102c:       0f 1f 40 00             nopl   0x0(%rax)
+    1030:       f3 0f 1e fa             endbr64
+    1034:       68 00 00 00 00          push   $0x0
+    1039:       e9 e2 ff ff ff          jmp    1020 <_init+0x20>
+    103e:       66 90                   xchg   %ax,%ax
+    1040:       f3 0f 1e fa             endbr64
+    1044:       68 01 00 00 00          push   $0x1
+    1049:       e9 d2 ff ff ff          jmp    1020 <_init+0x20>
+    104e:       66 90                   xchg   %ax,%ax
+    1050:       f3 0f 1e fa             endbr64
+    1054:       68 02 00 00 00          push   $0x2
+    1059:       e9 c2 ff ff ff          jmp    1020 <_init+0x20>
+    105e:       66 90                   xchg   %ax,%ax
+    1060:       f3 0f 1e fa             endbr64
+    1064:       68 03 00 00 00          push   $0x3
+    1069:       e9 b2 ff ff ff          jmp    1020 <_init+0x20>
+    106e:       66 90                   xchg   %ax,%ax
+Disassembly of section .plt.got:
+
+0000000000001070 <__cxa_finalize@plt>:
+    1070:       f3 0f 1e fa             endbr64
+    1074:       ff 25 7e 2f 00 00       jmp    *0x2f7e(%rip)        # 3ff8 <__cxa_finalize@GLIBC_2.2.5>
+    107a:       66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+
+Disassembly of section .plt.sec:
+
+0000000000001080 <puts@plt>:
+    1080:       f3 0f 1e fa             endbr64
+    1084:       ff 25 2e 2f 00 00       jmp    *0x2f2e(%rip)        # 3fb8 <puts@GLIBC_2.2.5>
+    108a:       66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+
+0000000000001090 <__stack_chk_fail@plt>:
+    1090:       f3 0f 1e fa             endbr64
+    1094:       ff 25 26 2f 00 00       jmp    *0x2f26(%rip)        # 3fc0 <__stack_chk_fail@GLIBC_2.4>
+    109a:       66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+
+00000000000010a0 <strcmp@plt>:
+    10a0:       f3 0f 1e fa             endbr64
+    10a4:       ff 25 1e 2f 00 00       jmp    *0x2f1e(%rip)        # 3fc8 <strcmp@GLIBC_2.2.5>
+    10aa:       66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+
+00000000000010b0 <__isoc99_scanf@plt>:
+    10b0:       f3 0f 1e fa             endbr64
+    10b4:       ff 25 16 2f 00 00       jmp    *0x2f16(%rip)        # 3fd0 <__isoc99_scanf@GLIBC_2.7>
+    10ba:       66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+///
+this section is Procedure Linkage Table, it converts position-independent function call to absolute locations, as it enable dynamic linking.
+///
+
+Disassembly of section .text:
+
+00000000000010c0 <_start>:
+    10c0:       f3 0f 1e fa             endbr64
+    10c4:       31 ed                   xor    %ebp,%ebp
+    10c6:       49 89 d1                mov    %rdx,%r9
+    10c9:       5e                      pop    %rsi
+    10ca:       48 89 e2                mov    %rsp,%rdx
+    10cd:       48 83 e4 f0             and    $0xfffffffffffffff0,%rsp
+    10d1:       50                      push   %rax
+    10d2:       54                      push   %rsp
+    10d3:       45 31 c0                xor    %r8d,%r8d
+    10d6:       31 c9                   xor    %ecx,%ecx
+    10d8:       48 8d 3d fd 00 00 00    lea    0xfd(%rip),%rdi        # 11dc <main>
+    10df:       ff 15 f3 2e 00 00       call   *0x2ef3(%rip)        # 3fd8 <__libc_start_main@GLIBC_2.34>
+    10e5:       f4                      hlt
+    10e6:       66 2e 0f 1f 84 00 00    cs nopw 0x0(%rax,%rax,1)
+    10ed:       00 00 00 
+///
+this is the entry point we saw in objdump -f Prob1. it does following tasks, clears registers, loads address of main (lea - load effective address) to rdi,
+calls __libc_start_main, it is an indirect call to relative address.
+///
+00000000000010f0 <deregister_tm_clones>:
+    10f0:       48 8d 3d 19 2f 00 00    lea    0x2f19(%rip),%rdi        # 4010 <__TMC_END__>
+    10f7:       48 8d 05 12 2f 00 00    lea    0x2f12(%rip),%rax        # 4010 <__TMC_END__>
+    10fe:       48 39 f8                cmp    %rdi,%rax
+    1101:       74 15                   je     1118 <deregister_tm_clones+0x28>
+    1103:       48 8b 05 d6 2e 00 00    mov    0x2ed6(%rip),%rax        # 3fe0 <_ITM_deregisterTMCloneTable@Base>
+    110a:       48 85 c0                test   %rax,%rax
+    110d:       74 09                   je     1118 <deregister_tm_clones+0x28>
+    110f:       ff e0                   jmp    *%rax
+    1111:       0f 1f 80 00 00 00 00    nopl   0x0(%rax)
+    1118:       c3                      ret
+    1119:       0f 1f 80 00 00 00 00    nopl   0x0(%rax)
+
+0000000000001120 <register_tm_clones>:
+    1120:       48 8d 3d e9 2e 00 00    lea    0x2ee9(%rip),%rdi        # 4010 <__TMC_END__>
+    1127:       48 8d 35 e2 2e 00 00    lea    0x2ee2(%rip),%rsi        # 4010 <__TMC_END__>
+    112e:       48 29 fe                sub    %rdi,%rsi
+    1131:       48 89 f0                mov    %rsi,%rax
+    1134:       48 c1 ee 3f             shr    $0x3f,%rsi
+    1138:       48 c1 f8 03             sar    $0x3,%rax
+    113c:       48 01 c6                add    %rax,%rsi
+    113f:       48 d1 fe                sar    $1,%rsi
+    1142:       74 14                   je     1158 <register_tm_clones+0x38>
+    1144:       48 8b 05 a5 2e 00 00    mov    0x2ea5(%rip),%rax        # 3ff0 <_ITM_registerTMCloneTable@Base>
+    114b:       48 85 c0                test   %rax,%rax
+    114e:       74 08                   je     1158 <register_tm_clones+0x38>
+    1150:       ff e0                   jmp    *%rax
+    1152:       66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+    1158:       c3                      ret
+    1159:       0f 1f 80 00 00 00 00    nopl   0x0(%rax)
+
+0000000000001160 <__do_global_dtors_aux>:
+    1160:       f3 0f 1e fa             endbr64
+    1164:       80 3d a5 2e 00 00 00    cmpb   $0x0,0x2ea5(%rip)        # 4010 <__TMC_END__>
+    116b:       75 2b                   jne    1198 <__do_global_dtors_aux+0x38>
+    116d:       55                      push   %rbp
+    116e:       48 83 3d 82 2e 00 00    cmpq   $0x0,0x2e82(%rip)        # 3ff8 <__cxa_finalize@GLIBC_2.2.5>
+    1175:       00 
+    1176:       48 89 e5                mov    %rsp,%rbp
+    1179:       74 0c                   je     1187 <__do_global_dtors_aux+0x27>
+    117b:       48 8b 3d 86 2e 00 00    mov    0x2e86(%rip),%rdi        # 4008 <__dso_handle>
+    1182:       e8 e9 fe ff ff          call   1070 <__cxa_finalize@plt>
+    1187:       e8 64 ff ff ff          call   10f0 <deregister_tm_clones>
+    118c:       c6 05 7d 2e 00 00 01    movb   $0x1,0x2e7d(%rip)        # 4010 <__TMC_END__>
+    1193:       5d                      pop    %rbp
+    1194:       c3                      ret
+    1195:       0f 1f 00                nopl   (%rax)
+    1198:       c3                      ret
+    1199:       0f 1f 80 00 00 00 00    nopl   0x0(%rax)
+
+00000000000011a0 <frame_dummy>:
+    11a0:       f3 0f 1e fa             endbr64
+    11a4:       e9 77 ff ff ff          jmp    1120 <register_tm_clones>
+///
+the functions deregister_tm_clones, register_tm_clones, __do_global_dtors_aux, frame_dummy are compiler generated functions.
+///
+00000000000011a9 <success>:
+    11a9:       f3 0f 1e fa             endbr64
+    11ad:       55                      push   %rbp
+    11ae:       48 89 e5                mov    %rsp,%rbp
+    11b1:       48 8d 05 50 0e 00 00    lea    0xe50(%rip),%rax        # 2008 <_IO_stdin_used+0x8>
+    11b8:       48 89 c7                mov    %rax,%rdi
+    11bb:       e8 c0 fe ff ff          call   1080 <puts@plt>
+    11c0:       90                      nop
+    11c1:       5d                      pop    %rbp
+    11c2:       c3                      ret
+///
+
+///
+00000000000011c3 <failure>:
+    11c3:       f3 0f 1e fa             endbr64
+    11c7:       55                      push   %rbp
+    11c8:       48 89 e5                mov    %rsp,%rbp
+    11cb:       48 8d 05 54 0e 00 00    lea    0xe54(%rip),%rax        # 2026 <_IO_stdin_used+0x26>
+    11d2:       48 89 c7                mov    %rax,%rdi
+    11d5:       e8 a6 fe ff ff          call   1080 <puts@plt>
+    11da:       eb ef                   jmp    11cb <failure+0x8>
+
+00000000000011dc <main>:
+    11dc:       f3 0f 1e fa             endbr64
+    11e0:       55                      push   %rbp
+    11e1:       48 89 e5                mov    %rsp,%rbp
+    11e4:       48 83 ec 70             sub    $0x70,%rsp
+    11e8:       64 48 8b 04 25 28 00    mov    %fs:0x28,%rax
+    11ef:       00 00 
+    11f1:       48 89 45 f8             mov    %rax,-0x8(%rbp)
+    11f5:       31 c0                   xor    %eax,%eax
+    11f7:       48 8d 05 32 0e 00 00    lea    0xe32(%rip),%rax        # 2030 <_IO_stdin_used+0x30>
+    11fe:       48 89 c7                mov    %rax,%rdi
+    1201:       e8 7a fe ff ff          call   1080 <puts@plt>
+    1206:       48 8d 45 90             lea    -0x70(%rbp),%rax
+    120a:       48 89 c6                mov    %rax,%rsi
+    120d:       48 8d 05 2b 0e 00 00    lea    0xe2b(%rip),%rax        # 203f <_IO_stdin_used+0x3f>
+    1214:       48 89 c7                mov    %rax,%rdi
+    1217:       b8 00 00 00 00          mov    $0x0,%eax
+    121c:       e8 8f fe ff ff          call   10b0 <__isoc99_scanf@plt>
+    1221:       48 8d 45 90             lea    -0x70(%rbp),%rax
+    1225:       48 8d 15 1c 0e 00 00    lea    0xe1c(%rip),%rdx        # 2048 <_IO_stdin_used+0x48>
+    122c:       48 89 d6                mov    %rdx,%rsi
+    122f:       48 89 c7                mov    %rax,%rdi
+    1232:       e8 69 fe ff ff          call   10a0 <strcmp@plt>
+    1237:       85 c0                   test   %eax,%eax
+    1239:       75 0c                   jne    1247 <main+0x6b>
+    123b:       b8 00 00 00 00          mov    $0x0,%eax
+    1240:       e8 64 ff ff ff          call   11a9 <success>
+    1245:       eb 0a                   jmp    1251 <main+0x75>
+    1247:       b8 00 00 00 00          mov    $0x0,%eax
+    124c:       e8 72 ff ff ff          call   11c3 <failure>
+    1251:       b8 00 00 00 00          mov    $0x0,%eax
+    1256:       48 8b 55 f8             mov    -0x8(%rbp),%rdx
+    125a:       64 48 2b 14 25 28 00    sub    %fs:0x28,%rdx
+    1261:       00 00 
+    1263:       74 05                   je     126a <main+0x8e>
+    1265:       e8 26 fe ff ff          call   1090 <__stack_chk_fail@plt>
+    126a:       c9                      leave
+    126b:       c3                      ret
+
+Disassembly of section .fini:
+
+000000000000126c <_fini>:
+    126c:       f3 0f 1e fa             endbr64
+    1270:       48 83 ec 08             sub    $0x8,%rsp
+    1274:       48 83 c4 08             add    $0x8,%rsp
+    1278:       c3                      ret
+
+after running gdb on Prob1 
+op : (No debugging symbols found in Prob1)

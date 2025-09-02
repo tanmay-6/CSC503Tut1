@@ -1,3 +1,17 @@
+///
+basics of assemly instructions
+- mov dest, src : this copies data from source to destination, it does not change source.
+- mov %src, %dest : using % sign changes the way of content being moved.
+- lea reg, [memory] : Load effective address of memory into register.
+- call : calls a function.
+- jmp : unconditionally jumping to a statement, for looping
+- jne : conditional jump, usually follows test
+- test : bitwise AND of operands, does not store the value.
+- xor dest, src : bitwise XOR of operands, xor dest, src effectively means dest = dest ^ src.
+- sub dest, src : subtract source from destination, dest = dest - src.
+- ret - meaning return from function. 
+///
+
 Input :  objdump -f Prob1
 
 Prob1:     file format elf64-x86-64
@@ -179,8 +193,13 @@ the functions deregister_tm_clones, register_tm_clones, __do_global_dtors_aux, f
     11c1:       5d                      pop    %rbp
     11c2:       c3                      ret
 ///
-
+endbr64 - automatically inserted by compiler for security.
+lea 0xe50(%rip),%rax # 2008 <_IO_stdin_used+0x8> - load effective address of value from 0x2008 into rax
+call   1080 <puts@plt> - calls the put function via Procedure linkage table, puts take value and prints it followed by newline.
+ret - return from the function
+this can be interpreted as some function which prints a value.
 ///
+
 00000000000011c3 <failure>:
     11c3:       f3 0f 1e fa             endbr64
     11c7:       55                      push   %rbp
@@ -189,6 +208,11 @@ the functions deregister_tm_clones, register_tm_clones, __do_global_dtors_aux, f
     11d2:       48 89 c7                mov    %rax,%rdi
     11d5:       e8 a6 fe ff ff          call   1080 <puts@plt>
     11da:       eb ef                   jmp    11cb <failure+0x8>
+///
+lea 0xe54(%rip),%rax # 2026 <_IO_stdin_used+0x26> - load effective address of value from 2026 to rax
+call   1080 <puts@plt> - calls put function again via PLT, and prints the value.
+jmp    11cb <failure+0x8> - unconditionally jumps to 11cb, which is loading effective address of value, and so forms the loop.
+///
 
 00000000000011dc <main>:
     11dc:       f3 0f 1e fa             endbr64
@@ -228,6 +252,18 @@ the functions deregister_tm_clones, register_tm_clones, __do_global_dtors_aux, f
     1265:       e8 26 fe ff ff          call   1090 <__stack_chk_fail@plt>
     126a:       c9                      leave
     126b:       c3                      ret
+///
+11f7 - 1201 : loads effective address of content at 0x2030 and prints the content.
+1206 - 121c : load an address to rsi, loads another address (203f ; having some content) to rdi, and then calls __isoc99_scanf
+therefore rsi is buffer, rdi is string and scanf is beig called.
+1221 - 1232 : again load effective address of -0x70(%rbp) to rax, and address of 2048 to rdx. copy the value from rdx to rsi, and rax to rdi.
+and then calls string comparison. effectively 0x2048 has the string which is being compared to user's input, so rsi have to string and rdi has the user content.
+eax being general purpose register content is overwritten to returned value of cmpstr funciton.
+test eax, eax, sets the Z flag if eax == 0, followed by jne (jump if not equal to zero) ie, if ZF == 0
+so in summary if e != 0 meaning ZF == 0 then jump to 1247 where failure funciton is called.
+and if e == 0 meaning ZF != 0 then continue where Success function is being called. after which eax is being cleared.
+this is a comparator function which compare string with hardcoded string.
+///
 
 Disassembly of section .fini:
 
@@ -236,6 +272,41 @@ Disassembly of section .fini:
     1270:       48 83 ec 08             sub    $0x8,%rsp
     1274:       48 83 c4 08             add    $0x8,%rsp
     1278:       c3                      ret
+///
+clean up after the program completes.
+///
 
-after running gdb on Prob1 
+---------------------------------------------------------
+///
+for understanding section data used command : objdump -s Prob1 and got the relevant address (0x2048) in .rodata section therefore using following command.
+///
+INPUT : objdump -s -j .rodata Prob1
+
+Prob1:     file format elf64-x86-64
+
+Contents of section .rodata:
+ 2000 01000200 00000000 436f7272 6563742c  ........Correct,
+ 2010 20476f20 746f206e 65787420 71756573   Go to next ques
+ 2020 74696f6e 2e00494e 434f5252 45435400  tion..INCORRECT.
+ 2030 456e7465 72206120 73747269 6e670025  Enter a string.%
+ 2040 73000000 00000000 57455348 4f554c44  s.......WESHOULD
+ 2050 414c534f 4c454152 4e544845 53454b49  ALSOLEARNTHESEKI
+ 2060 4e444f46 5448494e 475300             NDOFTHINGS.
+
+after running gdb on Prob1
 op : (No debugging symbols found in Prob1)
+///
+clearly the array for char starting from 2048 is "WESHOULDALSOLEARNTHESEKINDOFTHINGS"
+
+Running the file says : Permission designed
+checking for permissions : ls -l Prob1
+-rw-rw-rw- 1 codespace codespace 16168 Sep  1 14:12 Prob1
+adding executable permission : chmod +x Prob1
+rechecking for permissions : ls -l Prob1
+-rwxrwxrwx 1 codespace codespace 16168 Sep  1 14:12 Prob1
+executing file : ./Prob1 
+Enter a string
+WESHOULDALSOLEARNTHESEKINDOFTHINGS
+Correct, Go to next question.
+
+Thank You.

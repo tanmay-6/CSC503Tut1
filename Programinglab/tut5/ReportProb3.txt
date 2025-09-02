@@ -1,0 +1,176 @@
+Input : objdump -s -j .rodata Prob3
+
+Prob3:     file format elf64-x86-64
+
+Contents of section .rodata:
+ 2000 01000200 436f7272 6563742c 20476f20  ....Correct, Go 
+ 2010 746f206e 65787420 71756573 74696f6e  to next question
+ 2020 2e00494e 434f5252 45435400 456e7465  ..INCORRECT.Ente
+ 2030 72206120 6e756d62 65720025 6400      r a number.%d.  
+
+Disassembly of section .plt.sec:
+
+00000000000010a0 <puts@plt>:
+    10a0:       f3 0f 1e fa             endbr64
+    10a4:       ff 25 fe 2e 00 00       jmp    *0x2efe(%rip)        # 3fa8 <puts@GLIBC_2.2.5>
+    10aa:       66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+
+00000000000010b0 <__stack_chk_fail@plt>:
+    10b0:       f3 0f 1e fa             endbr64
+    10b4:       ff 25 f6 2e 00 00       jmp    *0x2ef6(%rip)        # 3fb0 <__stack_chk_fail@GLIBC_2.4>
+    10ba:       66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+
+00000000000010c0 <srand@plt>:
+    10c0:       f3 0f 1e fa             endbr64
+    10c4:       ff 25 ee 2e 00 00       jmp    *0x2eee(%rip)        # 3fb8 <srand@GLIBC_2.2.5>
+    10ca:       66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+
+00000000000010d0 <time@plt>:
+    10d0:       f3 0f 1e fa             endbr64
+    10d4:       ff 25 e6 2e 00 00       jmp    *0x2ee6(%rip)        # 3fc0 <time@GLIBC_2.2.5>
+    10da:       66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+
+00000000000010e0 <__isoc99_scanf@plt>:
+    10e0:       f3 0f 1e fa             endbr64
+    10e4:       ff 25 de 2e 00 00       jmp    *0x2ede(%rip)        # 3fc8 <__isoc99_scanf@GLIBC_2.7>
+    10ea:       66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+
+00000000000010f0 <rand@plt>:
+    10f0:       f3 0f 1e fa             endbr64
+    10f4:       ff 25 d6 2e 00 00       jmp    *0x2ed6(%rip)        # 3fd0 <rand@GLIBC_2.2.5>
+    10fa:       66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+
+000000000000121c <main>:
+    121c:       f3 0f 1e fa             endbr64
+    1220:       55                      push   %rbp
+    1221:       48 89 e5                mov    %rsp,%rbp
+    1224:       48 83 ec 10             sub    $0x10,%rsp
+    1228:       64 48 8b 04 25 28 00    mov    %fs:0x28,%rax
+    122f:       00 00 
+    1231:       48 89 45 f8             mov    %rax,-0x8(%rbp)
+    1235:       31 c0                   xor    %eax,%eax
+    1237:       bf 00 00 00 00          mov    $0x0,%edi
+    123c:       e8 8f fe ff ff          call   10d0 <time@plt>
+    1241:       89 c7                   mov    %eax,%edi
+    1243:       e8 78 fe ff ff          call   10c0 <srand@plt>
+    1248:       e8 a3 fe ff ff          call   10f0 <rand@plt>
+    124d:       89 45 f4                mov    %eax,-0xc(%rbp)
+    1250:       48 8d 05 d5 0d 00 00    lea    0xdd5(%rip),%rax        # 202c <_IO_stdin_used+0x2c>
+    1257:       48 89 c7                mov    %rax,%rdi
+    125a:       e8 41 fe ff ff          call   10a0 <puts@plt>
+    125f:       48 8d 45 f0             lea    -0x10(%rbp),%rax
+    1263:       48 89 c6                mov    %rax,%rsi
+    1266:       48 8d 05 ce 0d 00 00    lea    0xdce(%rip),%rax        # 203b <_IO_stdin_used+0x3b>
+    126d:       48 89 c7                mov    %rax,%rdi
+    1270:       b8 00 00 00 00          mov    $0x0,%eax
+    1275:       e8 66 fe ff ff          call   10e0 <__isoc99_scanf@plt>
+    127a:       8b 45 f0                mov    -0x10(%rbp),%eax
+    127d:       39 45 f4                cmp    %eax,-0xc(%rbp)
+    1280:       75 0c                   jne    128e <main+0x72>
+    1282:       b8 00 00 00 00          mov    $0x0,%eax
+    1287:       e8 5d ff ff ff          call   11e9 <success>
+    128c:       eb 0a                   jmp    1298 <main+0x7c>
+    128e:       b8 00 00 00 00          mov    $0x0,%eax
+    1293:       e8 6b ff ff ff          call   1203 <failure>
+    1298:       b8 00 00 00 00          mov    $0x0,%eax
+    129d:       48 8b 55 f8             mov    -0x8(%rbp),%rdx
+    12a1:       64 48 2b 14 25 28 00    sub    %fs:0x28,%rdx
+    12a8:       00 00 
+    12aa:       74 05                   je     12b1 <main+0x95>
+    12ac:       e8 ff fd ff ff          call   10b0 <__stack_chk_fail@plt>
+    12b1:       c9                      leave
+    12b2:       c3                      ret
+
+time@plt -> eax -> edi 
+srand ->rand-> -0xc(%rbp)
+202c -> rax -> rdi {enter a number}
+number ->  -0x10(%rbp) -> rsi -> rdi
+0->eax , scanf:eax->userinput 
+
+therefore the number is generated at random and user has to guess that number.
+trying to check at runtime to content of register which stores random value.
+
+Input : $ gdb Prob3
+GNU gdb (Ubuntu 15.0.50.20240403-0ubuntu1) 15.0.50.20240403-git
+Copyright (C) 2024 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from Prob3...
+(gdb) b *main
+Breakpoint 1 at 0x121c: file gdb.c, line 14.
+(gdb) run
+Starting program: /workspaces/CSC503Tut1/Programinglab/tut5/Prob3 
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.ubuntu.com>
+Enable debuginfod for this session? (y or [n]) y
+Debuginfod has been enabled.
+To make this setting permanent, add 'set debuginfod enabled on' to .gdbinit.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+
+Breakpoint 1, main () at gdb.c:14
+14      in gdb.c
+(gdb) disassemble
+Dump of assembler code for function main:
+=> 0x000055555555521c <+0>:     endbr64
+   0x0000555555555220 <+4>:     push   %rbp
+   0x0000555555555221 <+5>:     mov    %rsp,%rbp
+   0x0000555555555224 <+8>:     sub    $0x10,%rsp
+   0x0000555555555228 <+12>:    mov    %fs:0x28,%rax
+   0x0000555555555231 <+21>:    mov    %rax,-0x8(%rbp)
+   0x0000555555555235 <+25>:    xor    %eax,%eax
+   0x0000555555555237 <+27>:    mov    $0x0,%edi
+   0x000055555555523c <+32>:    call   0x5555555550d0 <time@plt>
+   0x0000555555555241 <+37>:    mov    %eax,%edi
+   0x0000555555555243 <+39>:    call   0x5555555550c0 <srand@plt>
+   0x0000555555555248 <+44>:    call   0x5555555550f0 <rand@plt>
+   0x000055555555524d <+49>:    mov    %eax,-0xc(%rbp)
+   0x0000555555555250 <+52>:    lea    0xdd5(%rip),%rax        # 0x55555555602c
+   0x0000555555555257 <+59>:    mov    %rax,%rdi
+   0x000055555555525a <+62>:    call   0x5555555550a0 <puts@plt>
+   0x000055555555525f <+67>:    lea    -0x10(%rbp),%rax
+   0x0000555555555263 <+71>:    mov    %rax,%rsi
+   0x0000555555555266 <+74>:    lea    0xdce(%rip),%rax        # 0x55555555603b
+   0x000055555555526d <+81>:    mov    %rax,%rdi
+   0x0000555555555270 <+84>:    mov    $0x0,%eax
+   0x0000555555555275 <+89>:    call   0x5555555550e0 <__isoc99_scanf@plt>
+   0x000055555555527a <+94>:    mov    -0x10(%rbp),%eax
+   0x000055555555527d <+97>:    cmp    %eax,-0xc(%rbp)
+   0x0000555555555280 <+100>:   jne    0x55555555528e <main+114>
+   0x0000555555555282 <+102>:   mov    $0x0,%eax
+   0x0000555555555287 <+107>:   call   0x5555555551e9 <success>
+   0x000055555555528c <+112>:   jmp    0x555555555298 <main+124>
+   0x000055555555528e <+114>:   mov    $0x0,%eax
+   0x0000555555555293 <+119>:   call   0x555555555203 <failure>
+   0x0000555555555298 <+124>:   mov    $0x0,%eax
+   0x000055555555529d <+129>:   mov    -0x8(%rbp),%rdx
+   0x00005555555552a1 <+133>:   sub    %fs:0x28,%rdx
+   0x00005555555552aa <+142>:   je     0x5555555552b1 <main+149>
+--Type <RET> for more, q to quit, c to continue without paging--c
+(gdb) b *main+84
+Breakpoint 2 at 0x555555555270: file gdb.c, line 19.
+(gdb) continue
+Continuing.
+Enter a number
+
+Breakpoint 2, 0x0000555555555270 in main () at gdb.c:19
+19      in gdb.c
+(gdb) p/d *(int *)($rbp - 0xc)
+$1 = 558813745
+(gdb) continue
+Continuing.
+558813745
+Correct, Go to next question.
+[Inferior 1 (process 112159) exited normally]

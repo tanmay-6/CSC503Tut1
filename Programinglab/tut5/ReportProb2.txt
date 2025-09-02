@@ -1,0 +1,114 @@
+Input : objdump -f Prob2
+
+Prob2:     file format elf64-x86-64
+architecture: i386:x86-64, flags 0x00000150:
+HAS_SYMS, DYNAMIC, D_PAGED
+start address 0x00000000000010a0
+
+Input : objdump -d Prob2
+Prob2:     file format elf64-x86-64
+Disassembly of section .init:
+0000000000001000 <_init>:
+
+Disassembly of section .plt:
+0000000000001020 <.plt>:
+
+Disassembly of section .plt.got:
+0000000000001060 <__cxa_finalize@plt>:
+
+Disassembly of section .plt.sec:
+0000000000001070 <puts@plt>:
+0000000000001080 <__stack_chk_fail@plt>:
+0000000000001090 <__isoc99_scanf@plt>:
+
+Disassembly of section .text:
+00000000000010a0 <_start>:
+00000000000010d0 <deregister_tm_clones>:
+0000000000001100 <register_tm_clones>:
+0000000000001140 <__do_global_dtors_aux>:
+0000000000001180 <frame_dummy>:
+
+0000000000001189 <success>:
+    1189:       f3 0f 1e fa             endbr64
+    118d:       55                      push   %rbp
+    118e:       48 89 e5                mov    %rsp,%rbp
+    1191:       48 8d 05 6c 0e 00 00    lea    0xe6c(%rip),%rax        # 2004 <_IO_stdin_used+0x4>
+    1198:       48 89 c7                mov    %rax,%rdi
+    119b:       e8 d0 fe ff ff          call   1070 <puts@plt>
+    11a0:       90                      nop
+    11a1:       5d                      pop    %rbp
+    11a2:       c3                      ret
+
+00000000000011a3 <failure>:
+    11a3:       f3 0f 1e fa             endbr64
+    11a7:       55                      push   %rbp
+    11a8:       48 89 e5                mov    %rsp,%rbp
+    11ab:       48 8d 05 70 0e 00 00    lea    0xe70(%rip),%rax        # 2022 <_IO_stdin_used+0x22>
+    11b2:       48 89 c7                mov    %rax,%rdi
+    11b5:       e8 b6 fe ff ff          call   1070 <puts@plt>
+    11ba:       eb ef                   jmp    11ab <failure+0x8>
+
+00000000000011bc <main>:
+    11bc:       f3 0f 1e fa             endbr64
+    11c0:       55                      push   %rbp
+    11c1:       48 89 e5                mov    %rsp,%rbp
+    11c4:       48 83 ec 10             sub    $0x10,%rsp
+    11c8:       64 48 8b 04 25 28 00    mov    %fs:0x28,%rax
+    11cf:       00 00 
+    11d1:       48 89 45 f8             mov    %rax,-0x8(%rbp)
+    11d5:       31 c0                   xor    %eax,%eax
+    11d7:       48 8d 05 4e 0e 00 00    lea    0xe4e(%rip),%rax        # 202c <_IO_stdin_used+0x2c>
+    11de:       48 89 c7                mov    %rax,%rdi
+    11e1:       e8 8a fe ff ff          call   1070 <puts@plt>
+    11e6:       48 8d 45 f4             lea    -0xc(%rbp),%rax
+    11ea:       48 89 c6                mov    %rax,%rsi
+    11ed:       48 8d 05 47 0e 00 00    lea    0xe47(%rip),%rax        # 203b <_IO_stdin_used+0x3b>
+    11f4:       48 89 c7                mov    %rax,%rdi
+    11f7:       b8 00 00 00 00          mov    $0x0,%eax
+    11fc:       e8 8f fe ff ff          call   1090 <__isoc99_scanf@plt>
+    1201:       8b 45 f4                mov    -0xc(%rbp),%eax
+    1204:       3d 4f 18 ff 3a          cmp    $0x3aff184f,%eax
+    1209:       75 0c                   jne    1217 <main+0x5b>
+    120b:       b8 00 00 00 00          mov    $0x0,%eax
+    1210:       e8 74 ff ff ff          call   1189 <success>
+    1215:       eb 0a                   jmp    1221 <main+0x65>
+    1217:       b8 00 00 00 00          mov    $0x0,%eax
+    121c:       e8 82 ff ff ff          call   11a3 <failure>
+    1221:       b8 00 00 00 00          mov    $0x0,%eax
+    1226:       48 8b 55 f8             mov    -0x8(%rbp),%rdx
+    122a:       64 48 2b 14 25 28 00    sub    %fs:0x28,%rdx
+    1231:       00 00 
+    1233:       74 05                   je     123a <main+0x7e>
+    1235:       e8 46 fe ff ff          call   1080 <__stack_chk_fail@plt>
+    123a:       c9                      leave
+    123b:       c3                      ret
+///
+directly comparing user's input with a constant 0x3aff184f which translates to 989796431 in decimal
+///
+
+Disassembly of section .fini:
+000000000000123c <_fini>:
+
+----------------------------------------------------
+
+Input : objdump -s -j .rodata Prob2
+
+Prob2:     file format elf64-x86-64
+
+Contents of section .rodata:
+ 2000 01000200 436f7272 6563742c 20476f20  ....Correct, Go 
+ 2010 746f206e 65787420 71756573 74696f6e  to next question
+ 2020 2e00494e 434f5252 45435400 456e7465  ..INCORRECT.Ente
+ 2030 72206120 4e756d62 65720025 6400      r a Number.%d. 
+
+///
+as we are taking an integer %d the way to execute the program is by giving number 989796431
+///
+
+Input :ls -l Prob2
+-rw-rw-rw- 1 codespace codespace 16128 Sep  1 14:12 Prob2
+Input : chmod +x Prob2
+Input : ./Prob2
+Enter a Number
+989796431
+Correct, Go to next question.

@@ -1,4 +1,14 @@
 ///
+basics of objdump
+syntax : objdump [options] [object-files]
+
+Option	Description	Example Usage
+-f	Show file headers (architecture, entry point)	
+-x	Show all headers	
+-d	Disassemble the code section	
+-D	Disassemble all sections	
+-s	Display section contents 
+
 basics of assemly instructions
 - mov dest, src : this copies data from source to destination, it does not change source.
 - mov %src, %dest : using % sign changes the way of content being moved.
@@ -293,8 +303,6 @@ Contents of section .rodata:
  2050 414c534f 4c454152 4e544845 53454b49  ALSOLEARNTHESEKI
  2060 4e444f46 5448494e 475300             NDOFTHINGS.
 
-after running gdb on Prob1
-op : (No debugging symbols found in Prob1)
 ///
 clearly the array for char starting from 2048 is "WESHOULDALSOLEARNTHESEKINDOFTHINGS"
 
@@ -309,4 +317,305 @@ Enter a string
 WESHOULDALSOLEARNTHESEKINDOFTHINGS
 Correct, Go to next question.
 
-Thank You.
+-----------------------------------Prob2----------------------------------------
+Input : objdump -f Prob2
+
+Prob2:     file format elf64-x86-64
+architecture: i386:x86-64, flags 0x00000150:
+HAS_SYMS, DYNAMIC, D_PAGED
+start address 0x00000000000010a0
+
+Input : objdump -d Prob2
+Prob2:     file format elf64-x86-64
+Disassembly of section .init:
+0000000000001000 <_init>:
+
+Disassembly of section .plt:
+0000000000001020 <.plt>:
+
+Disassembly of section .plt.got:
+0000000000001060 <__cxa_finalize@plt>:
+
+Disassembly of section .plt.sec:
+0000000000001070 <puts@plt>:
+0000000000001080 <__stack_chk_fail@plt>:
+0000000000001090 <__isoc99_scanf@plt>:
+
+Disassembly of section .text:
+00000000000010a0 <_start>:
+00000000000010d0 <deregister_tm_clones>:
+0000000000001100 <register_tm_clones>:
+0000000000001140 <__do_global_dtors_aux>:
+0000000000001180 <frame_dummy>:
+
+0000000000001189 <success>:
+    1189:       f3 0f 1e fa             endbr64
+    118d:       55                      push   %rbp
+    118e:       48 89 e5                mov    %rsp,%rbp
+    1191:       48 8d 05 6c 0e 00 00    lea    0xe6c(%rip),%rax        # 2004 <_IO_stdin_used+0x4>
+    1198:       48 89 c7                mov    %rax,%rdi
+    119b:       e8 d0 fe ff ff          call   1070 <puts@plt>
+    11a0:       90                      nop
+    11a1:       5d                      pop    %rbp
+    11a2:       c3                      ret
+
+00000000000011a3 <failure>:
+    11a3:       f3 0f 1e fa             endbr64
+    11a7:       55                      push   %rbp
+    11a8:       48 89 e5                mov    %rsp,%rbp
+    11ab:       48 8d 05 70 0e 00 00    lea    0xe70(%rip),%rax        # 2022 <_IO_stdin_used+0x22>
+    11b2:       48 89 c7                mov    %rax,%rdi
+    11b5:       e8 b6 fe ff ff          call   1070 <puts@plt>
+    11ba:       eb ef                   jmp    11ab <failure+0x8>
+
+00000000000011bc <main>:
+    11bc:       f3 0f 1e fa             endbr64
+    11c0:       55                      push   %rbp
+    11c1:       48 89 e5                mov    %rsp,%rbp
+    11c4:       48 83 ec 10             sub    $0x10,%rsp
+    11c8:       64 48 8b 04 25 28 00    mov    %fs:0x28,%rax
+    11cf:       00 00 
+    11d1:       48 89 45 f8             mov    %rax,-0x8(%rbp)
+    11d5:       31 c0                   xor    %eax,%eax
+    11d7:       48 8d 05 4e 0e 00 00    lea    0xe4e(%rip),%rax        # 202c <_IO_stdin_used+0x2c>
+    11de:       48 89 c7                mov    %rax,%rdi
+    11e1:       e8 8a fe ff ff          call   1070 <puts@plt>
+    11e6:       48 8d 45 f4             lea    -0xc(%rbp),%rax
+    11ea:       48 89 c6                mov    %rax,%rsi
+    11ed:       48 8d 05 47 0e 00 00    lea    0xe47(%rip),%rax        # 203b <_IO_stdin_used+0x3b>
+    11f4:       48 89 c7                mov    %rax,%rdi
+    11f7:       b8 00 00 00 00          mov    $0x0,%eax
+    11fc:       e8 8f fe ff ff          call   1090 <__isoc99_scanf@plt>
+    1201:       8b 45 f4                mov    -0xc(%rbp),%eax
+    1204:       3d 4f 18 ff 3a          cmp    $0x3aff184f,%eax
+    1209:       75 0c                   jne    1217 <main+0x5b>
+    120b:       b8 00 00 00 00          mov    $0x0,%eax
+    1210:       e8 74 ff ff ff          call   1189 <success>
+    1215:       eb 0a                   jmp    1221 <main+0x65>
+    1217:       b8 00 00 00 00          mov    $0x0,%eax
+    121c:       e8 82 ff ff ff          call   11a3 <failure>
+    1221:       b8 00 00 00 00          mov    $0x0,%eax
+    1226:       48 8b 55 f8             mov    -0x8(%rbp),%rdx
+    122a:       64 48 2b 14 25 28 00    sub    %fs:0x28,%rdx
+    1231:       00 00 
+    1233:       74 05                   je     123a <main+0x7e>
+    1235:       e8 46 fe ff ff          call   1080 <__stack_chk_fail@plt>
+    123a:       c9                      leave
+    123b:       c3                      ret
+///
+most of the code is similar to that of previous problem.
+11fc: taking user's input. scanf function is being called.
+1204: cmp $0x3aff184f,%eax - directly comparing user's input with a constant 0x3aff184f which translates to 989796431 in decimal
+///
+
+Disassembly of section .fini:
+000000000000123c <_fini>:
+
+----------------------------------------------------
+
+Input : objdump -s -j .rodata Prob2
+
+Prob2:     file format elf64-x86-64
+
+Contents of section .rodata:
+ 2000 01000200 436f7272 6563742c 20476f20  ....Correct, Go 
+ 2010 746f206e 65787420 71756573 74696f6e  to next question
+ 2020 2e00494e 434f5252 45435400 456e7465  ..INCORRECT.Ente
+ 2030 72206120 4e756d62 65720025 6400      r a Number.%d. 
+
+///
+as we are taking an integer %d the way to execute the program is by giving number 989796431
+///
+
+Input :ls -l Prob2
+-rw-rw-rw- 1 codespace codespace 16128 Sep  1 14:12 Prob2
+Input : chmod +x Prob2
+Input : ./Prob2
+Enter a Number
+989796431
+Correct, Go to next question.
+
+-------------------------Prob3----------------------------
+Input : objdump -s -j .rodata Prob3
+
+Prob3:     file format elf64-x86-64
+
+Contents of section .rodata:
+ 2000 01000200 436f7272 6563742c 20476f20  ....Correct, Go 
+ 2010 746f206e 65787420 71756573 74696f6e  to next question
+ 2020 2e00494e 434f5252 45435400 456e7465  ..INCORRECT.Ente
+ 2030 72206120 6e756d62 65720025 6400      r a number.%d.  
+
+///
+This problem also demands to enter a number for success.
+///
+
+Input: objdump -d Prob3
+
+...output...
+Disassembly of section .plt.sec:
+
+00000000000010a0 <puts@plt>:
+    10a0:       f3 0f 1e fa             endbr64
+    10a4:       ff 25 fe 2e 00 00       jmp    *0x2efe(%rip)        # 3fa8 <puts@GLIBC_2.2.5>
+    10aa:       66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+
+00000000000010b0 <__stack_chk_fail@plt>:
+    10b0:       f3 0f 1e fa             endbr64
+    10b4:       ff 25 f6 2e 00 00       jmp    *0x2ef6(%rip)        # 3fb0 <__stack_chk_fail@GLIBC_2.4>
+    10ba:       66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+
+00000000000010c0 <srand@plt>:
+    10c0:       f3 0f 1e fa             endbr64
+    10c4:       ff 25 ee 2e 00 00       jmp    *0x2eee(%rip)        # 3fb8 <srand@GLIBC_2.2.5>
+    10ca:       66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+
+///srand funtion is used for random generation.
+
+00000000000010d0 <time@plt>:
+    10d0:       f3 0f 1e fa             endbr64
+    10d4:       ff 25 e6 2e 00 00       jmp    *0x2ee6(%rip)        # 3fc0 <time@GLIBC_2.2.5>
+    10da:       66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+
+/// this is time function which is calling <time@GLIBC_2.2.5>
+
+00000000000010e0 <__isoc99_scanf@plt>:
+    10e0:       f3 0f 1e fa             endbr64
+    10e4:       ff 25 de 2e 00 00       jmp    *0x2ede(%rip)        # 3fc8 <__isoc99_scanf@GLIBC_2.7>
+    10ea:       66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+
+00000000000010f0 <rand@plt>:
+    10f0:       f3 0f 1e fa             endbr64
+    10f4:       ff 25 d6 2e 00 00       jmp    *0x2ed6(%rip)        # 3fd0 <rand@GLIBC_2.2.5>
+    10fa:       66 0f 1f 44 00 00       nopw   0x0(%rax,%rax,1)
+
+///function to output random integer.
+
+000000000000121c <main>:
+    121c:       f3 0f 1e fa             endbr64
+    1220:       55                      push   %rbp
+    1221:       48 89 e5                mov    %rsp,%rbp
+    1224:       48 83 ec 10             sub    $0x10,%rsp
+    1228:       64 48 8b 04 25 28 00    mov    %fs:0x28,%rax
+    122f:       00 00 
+    1231:       48 89 45 f8             mov    %rax,-0x8(%rbp)
+    1235:       31 c0                   xor    %eax,%eax
+    1237:       bf 00 00 00 00          mov    $0x0,%edi
+    123c:       e8 8f fe ff ff          call   10d0 <time@plt> // calling time
+    1241:       89 c7                   mov    %eax,%edi
+    1243:       e8 78 fe ff ff          call   10c0 <srand@plt> //seeding srand funtion
+    1248:       e8 a3 fe ff ff          call   10f0 <rand@plt> // generating random integer.
+    124d:       89 45 f4                mov    %eax,-0xc(%rbp) // storing that integer into register or variable.
+    1250:       48 8d 05 d5 0d 00 00    lea    0xdd5(%rip),%rax        # 202c <_IO_stdin_used+0x2c> //taking input
+    1257:       48 89 c7                mov    %rax,%rdi
+    125a:       e8 41 fe ff ff          call   10a0 <puts@plt> //printing something
+    125f:       48 8d 45 f0             lea    -0x10(%rbp),%rax 
+    1263:       48 89 c6                mov    %rax,%rsi
+    1266:       48 8d 05 ce 0d 00 00    lea    0xdce(%rip),%rax        # 203b <_IO_stdin_used+0x3b>
+    126d:       48 89 c7                mov    %rax,%rdi
+    1270:       b8 00 00 00 00          mov    $0x0,%eax
+    1275:       e8 66 fe ff ff          call   10e0 <__isoc99_scanf@plt> //asking for user input.
+    127a:       8b 45 f0                mov    -0x10(%rbp),%eax
+    127d:       39 45 f4                cmp    %eax,-0xc(%rbp) // comparing already stored integer with user input
+    1280:       75 0c                   jne    128e <main+0x72> // conditional check
+    1282:       b8 00 00 00 00          mov    $0x0,%eax
+    1287:       e8 5d ff ff ff          call   11e9 <success>
+    128c:       eb 0a                   jmp    1298 <main+0x7c>
+    128e:       b8 00 00 00 00          mov    $0x0,%eax
+    1293:       e8 6b ff ff ff          call   1203 <failure>
+    1298:       b8 00 00 00 00          mov    $0x0,%eax
+    129d:       48 8b 55 f8             mov    -0x8(%rbp),%rdx
+    12a1:       64 48 2b 14 25 28 00    sub    %fs:0x28,%rdx
+    12a8:       00 00 
+    12aa:       74 05                   je     12b1 <main+0x95>
+    12ac:       e8 ff fd ff ff          call   10b0 <__stack_chk_fail@plt>
+    12b1:       c9                      leave
+    12b2:       c3                      ret
+
+/// code movement (rough sketch)
+time@plt -> eax -> edi 
+srand ->rand-> -0xc(%rbp)
+202c -> rax -> rdi {enter a number}
+number ->  -0x10(%rbp) -> rsi -> rdi
+0->eax , scanf:eax->userinput 
+
+therefore the number is generated at random and user has to guess that number.
+Solution : try to check at runtime, the content of register which stores random value.
+
+Input : $ gdb Prob3
+GNU gdb (Ubuntu 15.0.50.20240403-0ubuntu1) 15.0.50.20240403-git
+....
+Reading symbols from Prob3...
+(gdb) b *main //adding a breakpoint at main function
+Breakpoint 1 at 0x121c: file gdb.c, line 14.
+(gdb) run //starting execution
+Starting program: /workspaces/CSC503Tut1/Programinglab/tut5/Prob3 
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.ubuntu.com>
+Enable debuginfod for this session? (y or [n]) y
+Debuginfod has been enabled.
+To make this setting permanent, add 'set debuginfod enabled on' to .gdbinit.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+
+Breakpoint 1, main () at gdb.c:14
+14      in gdb.c
+(gdb) disassemble //disassemble main function
+Dump of assembler code for function main:
+=> 0x000055555555521c <+0>:     endbr64
+   0x0000555555555220 <+4>:     push   %rbp
+   0x0000555555555221 <+5>:     mov    %rsp,%rbp
+   0x0000555555555224 <+8>:     sub    $0x10,%rsp
+   0x0000555555555228 <+12>:    mov    %fs:0x28,%rax
+   0x0000555555555231 <+21>:    mov    %rax,-0x8(%rbp)
+   0x0000555555555235 <+25>:    xor    %eax,%eax
+   0x0000555555555237 <+27>:    mov    $0x0,%edi
+   0x000055555555523c <+32>:    call   0x5555555550d0 <time@plt>
+   0x0000555555555241 <+37>:    mov    %eax,%edi
+   0x0000555555555243 <+39>:    call   0x5555555550c0 <srand@plt>
+   0x0000555555555248 <+44>:    call   0x5555555550f0 <rand@plt>
+   0x000055555555524d <+49>:    mov    %eax,-0xc(%rbp)
+   0x0000555555555250 <+52>:    lea    0xdd5(%rip),%rax        # 0x55555555602c
+   0x0000555555555257 <+59>:    mov    %rax,%rdi
+   0x000055555555525a <+62>:    call   0x5555555550a0 <puts@plt>
+   0x000055555555525f <+67>:    lea    -0x10(%rbp),%rax
+   0x0000555555555263 <+71>:    mov    %rax,%rsi
+   0x0000555555555266 <+74>:    lea    0xdce(%rip),%rax        # 0x55555555603b
+   0x000055555555526d <+81>:    mov    %rax,%rdi
+   0x0000555555555270 <+84>:    mov    $0x0,%eax
+   0x0000555555555275 <+89>:    call   0x5555555550e0 <__isoc99_scanf@plt>
+   0x000055555555527a <+94>:    mov    -0x10(%rbp),%eax
+   0x000055555555527d <+97>:    cmp    %eax,-0xc(%rbp)
+   0x0000555555555280 <+100>:   jne    0x55555555528e <main+114>
+   0x0000555555555282 <+102>:   mov    $0x0,%eax
+   0x0000555555555287 <+107>:   call   0x5555555551e9 <success>
+   0x000055555555528c <+112>:   jmp    0x555555555298 <main+124>
+   0x000055555555528e <+114>:   mov    $0x0,%eax
+   0x0000555555555293 <+119>:   call   0x555555555203 <failure>
+   0x0000555555555298 <+124>:   mov    $0x0,%eax
+   0x000055555555529d <+129>:   mov    -0x8(%rbp),%rdx
+   0x00005555555552a1 <+133>:   sub    %fs:0x28,%rdx
+   0x00005555555552aa <+142>:   je     0x5555555552b1 <main+149>
+--Type <RET> for more, q to quit, c to continue without paging--c
+(gdb) b *main+84 // adding another breakpoint to check the value after partial code execution
+Breakpoint 2 at 0x555555555270: file gdb.c, line 19.
+(gdb) continue
+Continuing.
+Enter a number
+
+Breakpoint 2, 0x0000555555555270 in main () at gdb.c:19
+19      in gdb.c
+(gdb) p/d *(int *)($rbp - 0xc) //printing the value in decimal of the location ( location of register - hex value )
+$1 = 558813745
+(gdb) continue
+Continuing.
+558813745
+Correct, Go to next question.
+[Inferior 1 (process 112159) exited normally]
+
+/// Sucessfully ran the code///
+
+------------------------------------------Prob4---------------------------------
+
+

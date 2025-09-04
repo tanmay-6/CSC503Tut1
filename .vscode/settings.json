@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "vector": "cpp"
+        "vector": "cpp",
+        "stdio.h": "c",
+        "libc-header-start.h": "c"
     }
 }

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdint.h>
 int *p;
 int val;
 
@@ -16,6 +17,10 @@ void bar(int b){
 }
 
 int main(){
+  uintptr_t address = 0x7fffffffceb8;
+  long int *ptr = (long int *)address;
+  *ptr = 0x000055555555522e;
+  //0x000055555555522e 
   int a = 1, b = 2;
   foo(a);
   bar(b);

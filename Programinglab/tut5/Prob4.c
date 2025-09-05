@@ -4,7 +4,6 @@ int val;
 
 void foo(int a){
   p = &a;
-  p += 3;
   val = *(p);
   printf("In foo\n");
 }
@@ -12,7 +11,6 @@ void foo(int a){
 
 void bar(int b){
   p = &b;
-  p += 4;
   *(--p) = val;
   printf("In bar\n");
 }

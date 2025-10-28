@@ -1,64 +1,13 @@
 begin process p1
-print a
-send p2 mX
-send p3 mB
-recv p3 mC
-print b
-send p2 mX
-recv p2 mY
-recv p2 mX
-print c
+send p2 m1
+print abc
+print def
 end process
 
 begin process p2
-recv p1 mX
-print u
-send p1 mY
-send p4 mQ
-recv p1 mX
-print v
-send p3 mC
-print w
-end process
-
-begin process p3
-print k
-recv p2 mC
-send p1 mC
-send p4 mR
-recv p4 mZ
-print l
-send p1 mC
-end process
-
-begin process p4
-print s
-recv p2 mQ
-send p3 mZ
-print t
-recv p5 mH
-send p5 mH
-end process
-
-begin process p5
-print h1
-send p4 mH
-print h2
-recv p4 mH
-recv p6 mJ
-end process
-
-begin process p6
-print r1
-send p7 mJ
-print r2
-recv p7 mJ
-send p5 mJ
-end process
-
-begin process p7
-print g1
-recv p6 mJ
-send p6 mJ
-print g2
+print x1
+recv p1 m1
+print x2
+send p1 m2
+print x3
 end process

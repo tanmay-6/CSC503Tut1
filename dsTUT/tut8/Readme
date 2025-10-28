@@ -1,3 +1,5 @@
 LamportClock.cpp
 Compile: g++ -std=c++17 -O2 -pipe -static -s LamportClock.cpp -o Lamportclock
 Run: ./Lamportclock < input.txt
+
+The output will be shown on terminal itself

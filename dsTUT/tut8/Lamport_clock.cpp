@@ -61,7 +61,7 @@ struct MsgKeyHash {
         size_t h1 = std::hash<string>{}(k.from);
         size_t h2 = std::hash<string>{}(k.to);
         size_t h3 = std::hash<string>{}(k.data);
-        return h1 ^ (h2 << 1) ^ (h3 << 2);
+        return h1 ^ (h2<<1) ^ (h3<<2);
     }
 };
 
@@ -82,7 +82,7 @@ int main() {
     string currentId;
 
     auto fail = [&](const string& msg) -> int {
-        cerr << "error: " << msg << "\n";
+        cerr<<"error: "<<msg<<"\n";
         return 0;
     };
 
@@ -108,11 +108,11 @@ int main() {
             if (tok.size() >= 3 && tok[0] == "begin" && tok[1] == "process") {
                 const string nm = tok[2];
                 if (!looksLikeProc(nm)) {
-                    cerr << "error: invalid process name '" << nm << "'\n";
+                    cerr<<"error: invalid process name '"<<nm<<"'\n";
                     return 0;
                 }
                 if (procMap.count(nm)) {
-                    cerr << "error: duplicate process '" << nm << "'\n";
+                    cerr<<"error: duplicate process '"<<nm<<"'\n";
                     return 0;
                 }
                 inside = true;
@@ -122,7 +122,7 @@ int main() {
                 procMap.emplace(nm, std::move(P));
                 orderIds.push_back(nm);
             } else {
-                cerr << "error: expected 'begin process pK'\n";
+                cerr<<"error: expected 'begin process pK'\n";
                 return 0;
             }
         } else {
@@ -136,12 +136,12 @@ int main() {
             // operations: print X | send pN X | recv pN X
             if (tok[0] == "print") {
                 if (tok.size() != 2) {
-                    cerr << "error: syntax error: expected 'print msg'\n";
+                    cerr<<"error: syntax error: expected 'print msg'\n";
                     return 0;
                 }
                 const string msg = tok[1];
                 if (!isAlphaNumToken(msg)) {
-                    cerr << "error: invalid message token '" << msg << "'\n";
+                    cerr<<"error: invalid message token '"<<msg<<"'\n";
                     return 0;
                 }
                 Operation op;
@@ -150,17 +150,17 @@ int main() {
                 procMap[currentId].program.push_back(op);
             } else if (tok[0] == "send") {
                 if (tok.size() != 3) {
-                    cerr << "error: syntax error: expected 'send pN msg'\n";
+                    cerr<<"error: syntax error: expected 'send pN msg'\n";
                     return 0;
                 }
                 const string peer = tok[1];
                 const string msg = tok[2];
                 if (!looksLikeProc(peer)) {
-                    cerr << "error: invalid process name '" << peer << "'\n";
+                    cerr<<"error: invalid process name '"<<peer<<"'\n";
                     return 0;
                 }
                 if (!isAlphaNumToken(msg)) {
-                    cerr << "error: invalid message token '" << msg << "'\n";
+                    cerr<<"error: invalid message token '"<<msg<<"'\n";
                     return 0;
                 }
                 Operation op;
@@ -170,17 +170,17 @@ int main() {
                 procMap[currentId].program.push_back(op);
             } else if (tok[0] == "recv") {
                 if (tok.size() != 3) {
-                    cerr << "error: syntax error: expected 'recv pN msg'\n";
+                    cerr<<"error: syntax error: expected 'recv pN msg'\n";
                     return 0;
                 }
                 const string peer = tok[1];
                 const string msg = tok[2];
                 if (!looksLikeProc(peer)) {
-                    cerr << "error: invalid process name '" << peer << "'\n";
+                    cerr<<"error: invalid process name '"<<peer<<"'\n";
                     return 0;
                 }
                 if (!isAlphaNumToken(msg)) {
-                    cerr << "error: invalid message token '" << msg << "'\n";
+                    cerr<<"error: invalid message token '"<<msg<<"'\n";
                     return 0;
                 }
                 Operation op;
@@ -189,18 +189,18 @@ int main() {
                 op.payload = msg;
                 procMap[currentId].program.push_back(op);
             } else {
-                cerr << "error: syntax error: unknown operation '" << tok[0] << "'\n";
+                cerr<<"error: syntax error: unknown operation '"<<tok[0]<<"'\n";
                 return 0;
             }
         }
     }
 
     if (inside) {
-        cerr << "error: missing 'end process'\n";
+        cerr<<"error: missing 'end process'\n";
         return 0;
     }
     if (procMap.empty()) {
-        cerr << "error: no processes defined\n";
+        cerr<<"error: no processes defined\n";
         return 0;
     }
 
@@ -237,7 +237,7 @@ int main() {
                 p->time += 1;
                 {
                     ostringstream oss;
-                    oss << "printed " << p->id << " " << op.payload << " " << p->time;
+                    oss<<"printed "<<p->id<<" "<<op.payload<<" ("<<p->time<<")";
                     log.push_back(oss.str());
                 }
                 p->ip += 1;
@@ -249,7 +249,7 @@ int main() {
                 inbox[key].push_back(p->time);
                 {
                     ostringstream oss;
-                    oss << "sent " << p->id << " " << op.payload << " " << op.peer << " " << p->time;
+                    oss<<"sent "<<p->id<<" "<<op.payload<<" "<<op.peer<<" ("<<p->time<<")" ;
                     log.push_back(oss.str());
                 }
                 p->ip += 1;
@@ -265,7 +265,7 @@ int main() {
                     p->time = std::max(p->time, ts) + 1;
                     {
                         ostringstream oss;
-                        oss << "received " << p->id << " " << op.payload << " " << op.peer << " " << p->time;
+                        oss<<"received "<<p->id<<" "<<op.payload<<" "<<op.peer<<" ("<<p->time <<") ";
                         log.push_back(oss.str());
                     }
                     p->ip += 1;
@@ -284,11 +284,11 @@ int main() {
     }
 
     for (const auto& s : log) {
-        cout << s << "\n";
+        cout<<s<<"\n";
     }
 
     if (isDeadlocked) {
-        cout << "system deadlocked\n";
+        cout<<"system deadlocked\n";
         return 0;
     }
 
@@ -296,7 +296,7 @@ int main() {
         const MsgKey& k = kv.first;
         auto pending = kv.second.size();
         for (size_t i = 0; i < pending; ++i) {
-            cout << "message " << k.data << " " << k.from << " " << k.to << " not delivered\n";
+            cout<<"message "<<k.data<<" "<<k.from<<" -> "<<k.to<<" not delivered\n";
         }
     }
 

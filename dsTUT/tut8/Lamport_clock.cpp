@@ -73,7 +73,7 @@ int main() {
     vector<string> lines;
     for (string line; getline(cin, line); ) {
         lines.push_back(line);
-    } // [web:8]
+    }
 
     // Parse into processes
     unordered_map<string, Process> procMap;
@@ -84,7 +84,7 @@ int main() {
     auto fail = [&](const string& msg) -> int {
         cerr << "error: " << msg << "\n";
         return 0;
-    }; // [web:8]
+    };
 
     int lineNo = 0;
     for (const string& raw : lines) {
@@ -221,7 +221,7 @@ int main() {
             if (p->ip < static_cast<int>(p->program.size())) return false;
         }
         return true;
-    }; // [web:8]
+    }; //  
 
     // Fair simulation loop
     bool isDeadlocked = false;
